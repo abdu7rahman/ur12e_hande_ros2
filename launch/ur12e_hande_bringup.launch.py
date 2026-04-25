@@ -55,19 +55,13 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={
             "ur_type":           "ur12e",
             "robot_ip":          robot_ip,
-            "launch_rviz":       "false",
+            "launch_rviz":       LaunchConfiguration("launch_rviz"),
             "use_fake_hardware": "false",
         }.items(),
         condition=IfCondition(launch_moveit),
     )
 
-    rviz_node = Node(
-        package="rviz2",
-        executable="rviz2",
-        condition=IfCondition(launch_rviz),
-    )
-
-    return [ur_control, gripper_node, moveit, rviz_node]
+    return [ur_control, gripper_node, moveit]
 
 
 def generate_launch_description():
