@@ -26,13 +26,12 @@ def launch_setup(context, *args, **kwargs):
     bringup_pkg  = FindPackageShare("ur12e_hande_bringup")
     ur_driver_pkg = FindPackageShare("ur_robot_driver")
 
-    # Combined URDF (real hardware mode)
-    robot_description = ParameterValue(Command([
+    # Gripper-only URDF — only the Hand-E hardware interface, no UR arm.
+    # The arm is fully managed by ur_robot_driver; the gripper gets its own controller_manager.
+    gripper_description = ParameterValue(Command([
         "xacro ",
-        PathJoinSubstitution([bringup_pkg, "urdf", "ur12e_hande.urdf.xacro"]),
-        " use_mock_hardware:=false",
-        " robot_ip:=", robot_ip,
-        " tf_prefix:=", tf_prefix,
+        PathJoinSubstitution([bringup_pkg, "urdf", "hande_control.urdf.xacro"]),
+        " use_fake_hardware:=false",
         " tty_port:=", tty_port,
         " create_socat_tty:=", create_socat,
         " socat_ip_address:=", robot_ip,
@@ -63,7 +62,7 @@ def launch_setup(context, *args, **kwargs):
         package="robot_state_publisher",
         executable="robot_state_publisher",
         namespace="gripper",
-        parameters=[{"robot_description": robot_description}],
+        parameters=[{"robot_description": gripper_description}],
         remappings=[("/tf", "tf"), ("/tf_static", "tf_static")],
     )
 
@@ -72,7 +71,7 @@ def launch_setup(context, *args, **kwargs):
         executable="ros2_control_node",
         namespace="gripper",
         parameters=[
-            {"robot_description": robot_description},
+            {"robot_description": gripper_description},
             PathJoinSubstitution([bringup_pkg, "config", "ur12e_hande_controllers.yaml"]),
         ],
     )

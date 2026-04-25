@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!-- Minimal URDF for the gripper controller_manager only.
+     Contains just the Hand-E ros2_control hardware interface — no UR arm. -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="hande_control">
+
+  <xacro:arg name="tty_port"          default="/tmp/ttyUR"/>
+  <xacro:arg name="create_socat_tty"  default="false"/>
+  <xacro:arg name="socat_ip_address"  default="10.18.1.106"/>
+  <xacro:arg name="socat_port"        default="54321"/>
+  <xacro:arg name="frequency_hz"      default="10"/>
+  <xacro:arg name="use_fake_hardware" default="false"/>
+
+  <xacro:include filename="$(find robotiq_hande_description)/urdf/robotiq_hande_gripper.xacro"/>
+
+  <link name="world"/>
+
+  <xacro:robotiq_hande_gripper
+    name="robotiq_hande"
+    parent="world"
+    prefix="hande_"
+    grip_pos_min="0.0"
+    grip_pos_max="0.025"
+    use_fake_hardware="$(arg use_fake_hardware)"
+    tty_port="$(arg tty_port)"
+    baudrate="115200"
+    parity="N"
+    data_bits="8"
+    stop_bit="1"
+    slave_id="9"
+    frequency_hz="$(arg frequency_hz)"
+    create_socat_tty="$(arg create_socat_tty)"
+    socat_ip_address="$(arg socat_ip_address)"
+    socat_port="$(arg socat_port)"
+  />
+
+</robot>
