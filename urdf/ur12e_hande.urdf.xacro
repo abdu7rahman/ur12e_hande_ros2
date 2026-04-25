@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ur12e_hande">
+
+  <!-- ── args ──────────────────────────────────────────────────────────────── -->
+  <xacro:arg name="robot_ip"             default="192.168.1.102"/>
+  <xacro:arg name="use_mock_hardware"    default="true"/>
+  <xacro:arg name="mock_sensor_commands" default="false"/>
+  <xacro:arg name="headless_mode"        default="false"/>
+  <xacro:arg name="tf_prefix"            default=""/>
+  <!-- UR script communication -->
+  <xacro:arg name="script_filename"        default=""/>
+  <xacro:arg name="output_recipe_filename" default=""/>
+  <xacro:arg name="input_recipe_filename"  default=""/>
+  <xacro:arg name="reverse_ip"            default="0.0.0.0"/>
+  <xacro:arg name="script_command_port"   default="50004"/>
+  <xacro:arg name="reverse_port"          default="50001"/>
+  <xacro:arg name="script_sender_port"    default="50002"/>
+  <xacro:arg name="trajectory_port"       default="50003"/>
+  <!-- Hand-E serial / socat -->
+  <xacro:arg name="tty_port"             default="/tmp/ttyUR"/>
+  <xacro:arg name="create_socat_tty"     default="false"/>
+  <xacro:arg name="socat_ip_address"     default="192.168.1.102"/>
+  <xacro:arg name="socat_port"           default="54321"/>
+  <xacro:arg name="gripper_frequency_hz" default="10"/>
+
+  <!-- ── includes ──────────────────────────────────────────────────────────── -->
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+  <xacro:include filename="$(find ur_robot_driver)/urdf/ur.ros2_control.xacro"/>
+  <xacro:include filename="$(find robotiq_hande_description)/urdf/robotiq_hande_gripper.xacro"/>
+
+  <!-- ── world ─────────────────────────────────────────────────────────────── -->
+  <link name="world"/>
+
+  <!-- ── UR12e kinematic chain ─────────────────────────────────────────────── -->
+  <xacro:ur_robot
+    name="ur"
+    tf_prefix="$(arg tf_prefix)"
+    parent="world"
+    joint_limits_parameters_file="$(find ur_description)/config/ur12e/joint_limits.yaml"
+    kinematics_parameters_file="$(find ur_description)/config/ur12e/default_kinematics.yaml"
+    physical_parameters_file="$(find ur_description)/config/ur12e/physical_parameters.yaml"
+    visual_parameters_file="$(find ur_description)/config/ur12e/visual_parameters.yaml"
+  >
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- ── UR ros2_control hardware interface ────────────────────────────────── -->
+  <xacro:ur_ros2_control
+    name="ur"
+    tf_prefix="$(arg tf_prefix)"
+    kinematics_parameters_file="$(find ur_description)/config/ur12e/default_kinematics.yaml"
+    robot_ip="$(arg robot_ip)"
+    use_mock_hardware="$(arg use_mock_hardware)"
+    mock_sensor_commands="$(arg mock_sensor_commands)"
+    headless_mode="$(arg headless_mode)"
+    script_filename="$(arg script_filename)"
+    output_recipe_filename="$(arg output_recipe_filename)"
+    input_recipe_filename="$(arg input_recipe_filename)"
+    reverse_ip="$(arg reverse_ip)"
+    script_command_port="$(arg script_command_port)"
+    reverse_port="$(arg reverse_port)"
+    script_sender_port="$(arg script_sender_port)"
+    trajectory_port="$(arg trajectory_port)"
+  />
+
+  <!-- ── Robotiq Hand-E (attached to tool0) ────────────────────────────────── -->
+  <xacro:robotiq_hande_gripper
+    name="robotiq_hande"
+    parent="$(arg tf_prefix)tool0"
+    prefix="hande_"
+    grip_pos_min="0.0"
+    grip_pos_max="0.025"
+    use_fake_hardware="$(arg use_mock_hardware)"
+    tty_port="$(arg tty_port)"
+    baudrate="115200"
+    parity="N"
+    data_bits="8"
+    stop_bit="1"
+    slave_id="9"
+    frequency_hz="$(arg gripper_frequency_hz)"
+    create_socat_tty="$(arg create_socat_tty)"
+    socat_ip_address="$(arg socat_ip_address)"
+    socat_port="$(arg socat_port)"
+  />
+
+</robot>
