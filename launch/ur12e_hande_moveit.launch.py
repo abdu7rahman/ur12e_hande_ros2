@@ -42,7 +42,7 @@ def launch_setup(context, *args, **kwargs):
     )
 
     rviz_config = PathJoinSubstitution([
-        FindPackageShare("ur_moveit_config"), "config", "moveit.rviz"
+        FindPackageShare("ur12e_hande_bringup"), "config", "moveit", "moveit.rviz"
     ])
     rviz_node = Node(
         package="rviz2",
