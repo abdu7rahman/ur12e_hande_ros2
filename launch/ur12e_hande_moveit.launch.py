@@ -28,6 +28,7 @@ def launch_setup(context, *args, **kwargs):
         )
         .robot_description_semantic(file_path="config/moveit/ur12e_hande.srdf")
         .robot_description_kinematics(file_path="config/moveit/kinematics.yaml")
+        .joint_limits(file_path="config/moveit/joint_limits.yaml")
         .trajectory_execution(file_path="config/moveit/moveit_controllers.yaml")
         .planning_pipelines(pipelines=["ompl", "pilz_industrial_motion_planner"])
         .to_moveit_configs()
