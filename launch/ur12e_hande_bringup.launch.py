@@ -14,7 +14,7 @@ from launch_ros.substitutions import FindPackageShare
 def launch_setup(context, *args, **kwargs):
     robot_ip      = LaunchConfiguration("robot_ip").perform(context)
     tf_prefix     = LaunchConfiguration("tf_prefix").perform(context)
-    launch_rviz   = LaunchConfiguration("launch_rviz")
+    launch_rviz   = LaunchConfiguration("launch_rviz").perform(context)
     launch_moveit = LaunchConfiguration("launch_moveit")
 
     ur_driver_pkg = FindPackageShare("ur_robot_driver")
@@ -55,7 +55,7 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={
             "ur_type":           "ur12e",
             "robot_ip":          robot_ip,
-            "launch_rviz":       LaunchConfiguration("launch_rviz"),
+            "launch_rviz":       launch_rviz,
             "use_fake_hardware": "false",
         }.items(),
         condition=IfCondition(launch_moveit),
