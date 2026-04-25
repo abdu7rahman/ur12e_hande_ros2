@@ -45,18 +45,16 @@ def launch_setup(context, *args, **kwargs):
         parameters=[{"robot_ip": robot_ip}],
     )
 
-    # ── optional MoveIt2 ──────────────────────────────────────────────────────
+    # ── optional MoveIt2 (custom launch with hand_e group) ───────────────────
     moveit = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
-                FindPackageShare("ur_moveit_config"), "launch", "ur_moveit.launch.py"
+                FindPackageShare("ur12e_hande_bringup"), "launch", "ur12e_hande_moveit.launch.py"
             ])
         ]),
         launch_arguments={
-            "ur_type":           "ur12e",
-            "robot_ip":          robot_ip,
-            "launch_rviz":       launch_rviz,
-            "use_fake_hardware": "false",
+            "robot_ip":    robot_ip,
+            "launch_rviz": launch_rviz,
         }.items(),
         condition=IfCondition(launch_moveit),
     )
