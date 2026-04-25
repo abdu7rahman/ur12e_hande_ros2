@@ -10,6 +10,7 @@ from rclpy.node import Node
 from rclpy.action import ActionServer, CancelResponse, GoalResponse
 from rclpy.callback_groups import ReentrantCallbackGroup
 from control_msgs.action import GripperCommand
+from sensor_msgs.msg import JointState
 
 GRIPPER_PORT  = 63352
 POS_MAX_M     = 0.025   # 0.025 m = fully open
@@ -25,9 +26,13 @@ class HandeGripperNode(Node):
 
         self._ip      = self.get_parameter('robot_ip').value
         self._timeout = self.get_parameter('timeout').value
-        self._pos_m   = 0.0   # last known position (metres)
+        self._pos_m   = 0.0
 
         self._activate()
+        self._pos_m = self._get_position()
+
+        self._js_pub = self.create_publisher(JointState, 'joint_states', 10)
+        self.create_timer(0.05, self._publish_joint_state)  # 20 Hz
 
         self._action_server = ActionServer(
             self,
@@ -40,6 +45,16 @@ class HandeGripperNode(Node):
         )
 
         self.get_logger().info(f'Hand-E node ready — {self._ip}:{GRIPPER_PORT}')
+
+    def _publish_joint_state(self):
+        msg = JointState()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.name     = ['hande_robotiq_hande_left_finger_joint',
+                        'hande_robotiq_hande_right_finger_joint']
+        msg.position = [self._pos_m, self._pos_m]
+        msg.velocity = [0.0, 0.0]
+        msg.effort   = [0.0, 0.0]
+        self._js_pub.publish(msg)
 
     # ── socket helpers ────────────────────────────────────────────────────────
 
