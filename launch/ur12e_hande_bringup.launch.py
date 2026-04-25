@@ -29,7 +29,7 @@ def launch_setup(context, *args, **kwargs):
             "robot_ip":                  robot_ip,
             "tf_prefix":                 tf_prefix,
             "launch_rviz":               "false",
-            "headless_mode":             "false",
+            "headless_mode":             "true",
             "use_fake_hardware":         "false",
             "activate_joint_controller": "true",
             "initial_joint_controller":  "scaled_joint_trajectory_controller",
