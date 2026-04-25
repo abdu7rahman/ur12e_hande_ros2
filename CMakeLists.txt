@@ -12,6 +12,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   ur12e_hande_bringup/hande_gripper_node.py
+  ur12e_hande_bringup/scene_publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

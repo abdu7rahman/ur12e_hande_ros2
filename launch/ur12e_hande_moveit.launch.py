@@ -60,7 +60,14 @@ def launch_setup(context, *args, **kwargs):
         ],
     )
 
-    return [move_group, rviz_node]
+    scene_node = Node(
+        package="ur12e_hande_bringup",
+        executable="scene_publisher.py",
+        name="scene_publisher",
+        output="screen",
+    )
+
+    return [move_group, rviz_node, scene_node]
 
 
 def generate_launch_description():
