@@ -191,13 +191,6 @@ ur12e_hande_bringup/
     ├── hande_gripper_node.py          # socket-based GripperCommand action server
     └── scene_publisher.py             # adds floor plane to planning scene
 ```
-
----
-
-## Related
-
-- [reactive-replanning-ur12e](https://github.com/abdu7rahman/reactive-replanning-ur12e) — kinematic redundancy-based reactive replanning built on top of this package
-
 ---
 
 ## License
