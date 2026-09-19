@@ -1,5 +1,9 @@
 # ur12e_hande_ros2
 
+[![ROS 2](https://img.shields.io/badge/ROS%202-Jazzy-22314E?style=flat-square&logo=ros&logoColor=white)](https://docs.ros.org/en/jazzy/)
+[![code size](https://img.shields.io/github/languages/code-size/abdu7rahman/ur12e_hande_ros2?style=flat-square)](https://github.com/abdu7rahman/ur12e_hande_ros2)
+[![last commit](https://img.shields.io/github/last-commit/abdu7rahman/ur12e_hande_ros2?style=flat-square)](https://github.com/abdu7rahman/ur12e_hande_ros2/commits/main)
+
 ROS2 Jazzy bringup package for the **UR12e arm + Robotiq Hand-E gripper**. Wraps the official `ur_robot_driver` for the arm and uses a direct socket-based action server (port 63352) for the gripper — no Modbus RTU required.
 
 ---
